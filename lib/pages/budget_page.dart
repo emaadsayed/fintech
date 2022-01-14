@@ -40,7 +40,7 @@ class _BudgetPageState extends State<BudgetPage> {
             ]),
             child: Padding(
               padding: const EdgeInsets.only(
-                  top: 40, right: 20, left: 20, bottom: 25),
+                  top: 30, right: 20, left: 20, bottom: 25),
               child: Column(
                 children: [
                   Row(

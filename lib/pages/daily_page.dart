@@ -50,7 +50,7 @@ class _DailyPageState extends State<DailyPage> {
                             fontWeight: FontWeight.bold,
                             color: black),
                       ),
-                      Icon(AntDesign.search1)
+                      Icon(Ionicons.md_stats)
                     ],
                   ),
                   const SizedBox(
