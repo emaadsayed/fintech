@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_one/pages/stats_page.dart';
 import 'package:flutter_one/theme/colors.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import "package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart";
+import 'budget_page.dart';
+import 'create_budget_page.dart';
 import 'daily_page.dart';
+import 'profile_page.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -41,18 +45,10 @@ class _RootAppState extends State<RootApp> {
       index: pageIndex,
       children: const [
         DailyPage(),
-        Center(
-          child: Text("Stats Page"),
-        ),
-        Center(
-          child: Text("Create Budget Page"),
-        ),
-        Center(
-          child: Text("Budget Page"),
-        ),
-        Center(
-          child: Text("Profile Page"),
-        ),
+        StatsPage(),
+        BudgetPage(),
+        ProfilePage(),
+        CreateBudgetPage(),
       ],
     );
   }
