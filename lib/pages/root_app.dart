@@ -6,6 +6,7 @@ import "package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'budget_page.dart';
 import 'create_budget_page.dart';
 import 'daily_page.dart';
+import 'make_payment_page.dart';
 import 'profile_page.dart';
 
 class RootApp extends StatefulWidget {
@@ -48,7 +49,7 @@ class _RootAppState extends State<RootApp> {
         StatsPage(),
         BudgetPage(),
         ProfilePage(),
-        CreateBudgetPage(),
+        MakePaymentPage(),
       ],
     );
   }

@@ -31,7 +31,7 @@ class _StatsPageState extends State<StatsPage> {
       {
         "icon": Icons.arrow_back,
         "color": blue,
-        "label": "Income",
+        "label": "Budget",
         "cost": "\$6593.75"
       },
       {

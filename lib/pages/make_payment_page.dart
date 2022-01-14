@@ -3,15 +3,17 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/json/create_budget_json.dart';
 import 'package:flutter_one/theme/colors.dart';
 
-class CreateBudgetPage extends StatefulWidget {
-  const CreateBudgetPage({Key? key}) : super(key: key);
+class MakePaymentPage extends StatefulWidget {
+  const MakePaymentPage({Key? key}) : super(key: key);
 
   @override
-  _CreateBudgetPageState createState() => _CreateBudgetPageState();
+  _MakePaymentPageState createState() => _MakePaymentPageState();
 }
 
-class _CreateBudgetPageState extends State<CreateBudgetPage> {
+class _MakePaymentPageState extends State<MakePaymentPage> {
   int activeCategory = 0;
+  TextEditingController _budgetName =
+  TextEditingController(text: "7718987190");
   TextEditingController _budgetPrice = TextEditingController(text: "\$1500.00");
   @override
   Widget build(BuildContext context) {
@@ -44,12 +46,15 @@ class _CreateBudgetPageState extends State<CreateBudgetPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Create budget",
+                        "New Payment",
                         style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                             color: black),
                       ),
+                      Row(
+                        children: [Icon(AntDesign.search1)],
+                      )
                     ],
                   ),
                 ],
@@ -142,13 +147,86 @@ class _CreateBudgetPageState extends State<CreateBudgetPage> {
                 })),
           ),
           SizedBox(
-            height: 50,
+            height: 30,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  "Pay Using : ",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Color(0xff67727d)),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    Container(
+                    decoration: BoxDecoration(
+                        color: primary,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: white)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(13.0),
+                      child: Text(
+                        "Phone Number",
+                        style: TextStyle(color: white),
+                      ),
+                    ),
+                  ),
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: black)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(13.0),
+                        child: Text(
+                          "Net Banking",
+                          style: TextStyle(color: black),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: black)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(13.0),
+                        child: Text(
+                          "QR Code",
+                          style: TextStyle(color: black),
+                        ),
+                      ),
+                    ),
+                  ]
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Phone Number",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Color(0xff67727d)),
+                ),
+                TextField(
+                  controller: _budgetName,
+                  cursorColor: black,
+                  style: TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.bold, color: black),
+                  decoration: InputDecoration(
+                      hintText: "Enter Phone Number", border: InputBorder.none),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -158,10 +236,10 @@ class _CreateBudgetPageState extends State<CreateBudgetPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Enter budget",
+                            "Enter Amount",
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                fontSize: 13,
+                                fontSize: 14,
                                 color: Color(0xff67727d)),
                           ),
                           TextField(
@@ -172,7 +250,7 @@ class _CreateBudgetPageState extends State<CreateBudgetPage> {
                                 fontWeight: FontWeight.bold,
                                 color: black),
                             decoration: InputDecoration(
-                                hintText: "Enter Budget",
+                                hintText: "Enter Amount",
                                 border: InputBorder.none),
                           ),
                         ],

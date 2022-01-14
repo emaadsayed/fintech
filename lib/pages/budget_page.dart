@@ -4,6 +4,8 @@ import 'package:flutter_one/json/budget_json.dart';
 import 'package:flutter_one/json/day_month.dart';
 import 'package:flutter_one/theme/colors.dart';
 
+import 'create_budget_page.dart';
+
 class BudgetPage extends StatefulWidget {
   const BudgetPage({Key? key}) : super(key: key);
 
@@ -53,9 +55,10 @@ class _BudgetPageState extends State<BudgetPage> {
                       ),
                       Row(
                         children: [
-                          Icon(
+                          IconButton(onPressed: (){_navigateToNextScreen(context);}, icon: Icon(
                             Icons.add,
                             size: 25,
+                          )
                           ),
                           SizedBox(
                             width: 20,
@@ -234,4 +237,8 @@ class _BudgetPageState extends State<BudgetPage> {
   }
 
 
+}
+
+void _navigateToNextScreen(BuildContext context) {
+  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateBudgetPage()));
 }
