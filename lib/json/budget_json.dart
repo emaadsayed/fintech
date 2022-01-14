@@ -13,7 +13,7 @@ const List budget_json = [
     "price": "\$3000.00",
     "label_percentage": "70%",
     "percentage": 0.7,
-    "color": red
+    "color": primary
   },
   {
     "name": "Bank",

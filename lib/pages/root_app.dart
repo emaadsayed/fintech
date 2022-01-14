@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_one/pages/home_page.dart';
 import 'package:flutter_one/pages/stats_page.dart';
 import 'package:flutter_one/theme/colors.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -35,7 +36,7 @@ class _RootAppState extends State<RootApp> {
           selectedTab(4);
         },
         child: const Icon(Icons.add, size: 25),
-        backgroundColor: Colors.pink
+        backgroundColor: Color(0xffF5591F)
       //params
     ),
         floatingActionButtonLocation:
@@ -45,8 +46,8 @@ class _RootAppState extends State<RootApp> {
     return IndexedStack(
       index: pageIndex,
       children: const [
+        HomePage(),
         DailyPage(),
-        StatsPage(),
         BudgetPage(),
         ProfilePage(),
         MakePaymentPage(),
@@ -55,8 +56,8 @@ class _RootAppState extends State<RootApp> {
   }
   Widget getFooter() {
     List<IconData> iconItems = [
+      Ionicons.md_cash,
       Ionicons.md_calendar,
-      Ionicons.md_stats,
       Ionicons.md_wallet,
       Ionicons.ios_person,
     ];

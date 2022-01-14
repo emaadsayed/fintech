@@ -38,6 +38,7 @@ dependencies:
   animated_bottom_navigation_bar: ^0.2.1
   fl_chart: ^0.12.2
   percent_indicator: "^2.1.7+2"
+  flutter_barcode_scanner: ^2.0.0
 
 dev_dependencies:
   flutter_test:
