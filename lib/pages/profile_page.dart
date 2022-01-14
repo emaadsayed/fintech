@@ -3,6 +3,8 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/theme/colors.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
+import 'add_income_page.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -12,7 +14,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   TextEditingController _email =
-  TextEditingController(text: "abbie_wilson@gmail.com");
+      TextEditingController(text: "abbie_wilson@gmail.com");
   TextEditingController dateOfBirth = TextEditingController(text: "04-19-1992");
   TextEditingController password = TextEditingController(text: "123456");
   @override
@@ -165,18 +167,25 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ],
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: white)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(13.0),
-                              child: Text(
-                                "Update",
-                                style: TextStyle(color: white),
+                          InkWell(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: white)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(13.0),
+                                  child: Text(
+                                    "Update",
+                                    style: TextStyle(color: white),
+                                  ),
+                                ),
                               ),
-                            ),
-                          )
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddIncomePage()));
+                              })
                         ],
                       ),
                     ),
@@ -252,6 +261,4 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-
-
 }
