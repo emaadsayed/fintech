@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_one/pages/registration_page.dart';
+import 'package:flutter_one/pages/root_app.dart';
 import 'package:flutter_one/widgets/btn_widget.dart';
 import 'package:flutter_one/widgets/herder_container.dart';
 
@@ -46,10 +47,10 @@ class _LoginPageState extends State<LoginPage> {
                     child: Center(
                       child: ButtonWidget(
                         onClick: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => RegPage()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RootApp()));
                         },
                         btnText: "LOGIN",
                       ),
