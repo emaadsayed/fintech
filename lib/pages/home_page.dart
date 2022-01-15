@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_one/pages/add_transaction_page.dart';
+import 'package:flutter_one/pages/send_money_page.dart';
 import 'package:flutter_one/theme/colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -58,7 +60,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Container(
-            margin: const EdgeInsets.only(top: 30),
+            margin: const EdgeInsets.only(top: 20),
             padding: const EdgeInsets.only(right: 20, left: 20),
             child: Column(
               children: [
@@ -160,76 +162,41 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          child: InkWell(
-                            onTap: () {},
-                            child: Container(
-                              margin: const EdgeInsets.all(4),
-                              decoration: const BoxDecoration(
-                                borderRadius: const BorderRadius.all(Radius.circular(20)),
-                                color: Color(0xFFFFFFFF),
-                              ),
-                              child: Center(
-                                child: Container(
-                                  margin: const EdgeInsets.all(50),
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: AssetImage('assets/images/sendMoney.png'))),
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                )
+                const SizedBox(
+                  height: 20,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SendMoneyPage()));
+                        },
+                        child: avatarWidget("sendMoney", "Send\nMoney"),
+                      ),
+                      avatarWidget("receiveMoney", "Receive\nMoney"),
+                      // avatarWidget("phone", "Add\
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddTransactionPage()));
+                        },
+                        child: avatarWidget("phone", "Add\nTransaction"),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           )
         ],
       ),
-    );
-  }
-
-  Column serviceWidget(String img, String name) {
-    return Column(
-      children: [
-        Container(
-          child: InkWell(
-            onTap: () {},
-            child: Container(
-              margin: const EdgeInsets.all(4),
-              decoration: const BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-                color: Color(0xFFFFFFFF),
-              ),
-              child: Center(
-                child: Container(
-                  margin: const EdgeInsets.all(25),
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/$img.png'))),
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        Text(
-          name,
-          style: const TextStyle(
-            fontSize: 14,
-          ),
-          textAlign: TextAlign.center,
-        )
-      ],
     );
   }
 
@@ -245,15 +212,14 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-            height: 60,
-            width: 60,
+            height: 40,
+            width: 40,
             decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                image: DecorationImage(
-                    image: AssetImage('assets/images/$img.png'),
-                    fit: BoxFit.contain),
-                border: Border.all(color: Colors.black, width: 2)),
+              color: Colors.white,
+              image: DecorationImage(
+                  image: AssetImage('assets/images/$img.png'),
+                  fit: BoxFit.contain),
+            ),
           ),
           Text(
             name,
