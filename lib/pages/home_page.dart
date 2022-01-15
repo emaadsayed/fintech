@@ -2,6 +2,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/pages/add_transaction_page.dart';
+import 'package:flutter_one/pages/receive_payment_page.dart';
 import 'package:flutter_one/pages/send_money_page.dart';
 import 'package:flutter_one/theme/colors.dart';
 import 'package:flutter_session/flutter_session.dart';
@@ -225,8 +226,15 @@ class _HomePageState extends State<HomePage> {
                         },
                         child: avatarWidget("sendMoney", "Send\nMoney"),
                       ),
-                      avatarWidget("receiveMoney", "Receive\nMoney"),
-                      // avatarWidget("phone", "Add\
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ReceivePage()));
+                        },
+                        child: avatarWidget("receiveMoney", "Receive\nMoney"),
+                      ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(

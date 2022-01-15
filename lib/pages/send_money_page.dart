@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/json/create_budget_json.dart';
 import 'package:flutter_one/theme/colors.dart';
@@ -153,6 +155,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                           setState(() {
                             activePayMethod = 2;
                           });
+                          scanBarcode();
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -179,9 +182,10 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                         ),
                       )
                     ]),
-                SizedBox(
+                if (activePayMethod != 2) SizedBox(
                   height: 20,
                 ),
+                if (activePayMethod != 2)
                 Text(
                   "Phone Number",
                   style: TextStyle(
@@ -189,6 +193,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                       fontSize: 14,
                       color: Color(0xff67727d)),
                 ),
+                if (activePayMethod != 2)
                 TextField(
                   controller: _phoneNumber,
                   cursorColor: black,
@@ -241,11 +246,13 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                       child: IconButton(
                           onPressed: () async {
                             var userId = await FlutterSession().get("userId");
+                            var bool = true;
                             Map data = {
                               "phone": _phoneNumber.text,
                               "amount": _budgetPrice.text,
                               "category": 6,
-                              "userId": userId
+                              "userId": userId,
+                              "bool": bool
                             };
                             var response =
                             await networkHandler.postIncome('payment', data);
@@ -271,5 +278,22 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
         ],
       ),
     );
+  }
+
+
+  Future scanBarcode() async {
+    final scanResult;
+    try {
+      print("open");
+      scanResult = await FlutterBarcodeScanner.scanBarcode(
+          "#ff6666", "cancel", true, ScanMode.QR);
+      if (!mounted) return;
+      _phoneNumber.text = scanResult;
+      print(scanResult);
+      // _phone = TextEditingController(text:scanResult);
+      print("close");
+    } on PlatformException {
+      print("error");
+    }
   }
 }

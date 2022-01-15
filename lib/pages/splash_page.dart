@@ -36,7 +36,7 @@ class _SplashPageState extends State<SplashPage> {
             begin: Alignment.topCenter),
       ),
       child: Center(
-        child: Image.asset("assets/images/logoNew.png"),
+        child: Image.asset("assets/images/Payup-whole white.png"),
       ),
     );
   }

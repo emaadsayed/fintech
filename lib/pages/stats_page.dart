@@ -5,6 +5,7 @@ import 'package:flutter_one/theme/colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_one/widgets/chart.dart';
 import 'package:flutter_session/flutter_session.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../NetworkHandler.dart';
 
@@ -20,11 +21,14 @@ class _StatsPageState extends State<StatsPage> {
   int activeDay = 5;
   bool showAvg = false;
   var netBal = 'loading...', budget = 'loading...', expense = 'loading...';
+  var loader = false;
 
   Future<void> getData() async {
+    loader = true;
     var month = months[activeDay]['day'];
     var userId = await FlutterSession().get("userId");
     var response = await networkHandler.get('stats/$userId/$month');
+    loader = false;
     setState(() {
       netBal = response['data']['total'];
       budget = response['data']['budget'];
@@ -44,27 +48,19 @@ class _StatsPageState extends State<StatsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFFAFAFA),
-      body: getBody(),
+      body: loader
+          ? Center(
+          child: SpinKitDoubleBounce(
+            color: Color(0xffF5591F),
+            size: 50.0,
+          ))
+          : getBody(),
     );
   }
 
   Widget getBody() {
     var size = MediaQuery.of(context).size;
 
-    List expenses = [
-      {
-        "icon": Icons.arrow_back,
-        "color": blue,
-        "label": "Budget",
-        "cost": "\$6593.75"
-      },
-      {
-        "icon": Icons.arrow_forward,
-        "color": green,
-        "label": "Expense",
-        "cost": "\$2645.50"
-      }
-    ];
     return SingleChildScrollView(
       child: Column(
         children: [

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_one/theme/colors.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_one/NetworkHandler.dart';
 import 'package:flutter_session/flutter_session.dart';
+// import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class MakePaymentPage extends StatefulWidget {
   const MakePaymentPage({Key? key}) : super(key: key);
@@ -16,9 +19,11 @@ class MakePaymentPage extends StatefulWidget {
 }
 
 class _MakePaymentPageState extends State<MakePaymentPage> {
+
   NetworkHandler networkHandler = NetworkHandler();
   int activeCategory = 0;
   int activePayMethod = 0;
+  var qrCode;
   TextEditingController _phone = TextEditingController();
   TextEditingController _budgetPrice = TextEditingController();
   @override
@@ -209,6 +214,7 @@ class _MakePaymentPageState extends State<MakePaymentPage> {
                           setState(() {
                             activePayMethod = 1;
                           });
+                          scanBarcode();
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -221,14 +227,14 @@ class _MakePaymentPageState extends State<MakePaymentPage> {
                               ? const Padding(
                                   padding: EdgeInsets.all(13.0),
                                   child: Text(
-                                    "Net Banking",
+                                    "QR Code",
                                     style: TextStyle(color: white),
                                   ),
                                 )
                               : const Padding(
                                   padding: EdgeInsets.all(13.0),
                                   child: Text(
-                                    "Net Banking",
+                                    "QR Code",
                                     style: TextStyle(color: black),
                                   ),
                                 ),
@@ -239,7 +245,6 @@ class _MakePaymentPageState extends State<MakePaymentPage> {
                           setState(() {
                             activePayMethod = 2;
                           });
-                          scanBarcode();
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -252,23 +257,24 @@ class _MakePaymentPageState extends State<MakePaymentPage> {
                               ? const Padding(
                                   padding: EdgeInsets.all(13.0),
                                   child: Text(
-                                    "QR Code",
+                                    "Net Banking",
                                     style: TextStyle(color: white),
                                   ),
                                 )
                               : const Padding(
                                   padding: EdgeInsets.all(13.0),
                                   child: Text(
-                                    "QR Code",
+                                    "Net Banking",
                                     style: TextStyle(color: black),
                                   ),
                                 ),
                         ),
                       )
                     ]),
-                SizedBox(
+                if (activePayMethod != 1) SizedBox(
                   height: 20,
                 ),
+                if (activePayMethod != 1)
                 Text(
                   "Phone Number",
                   style: TextStyle(
@@ -276,6 +282,7 @@ class _MakePaymentPageState extends State<MakePaymentPage> {
                       fontSize: 14,
                       color: Color(0xff67727d)),
                 ),
+                if (activePayMethod != 1)
                 TextField(
                   controller: _phone,
                   cursorColor: black,
@@ -327,12 +334,15 @@ class _MakePaymentPageState extends State<MakePaymentPage> {
                           borderRadius: BorderRadius.circular(15)),
                       child: IconButton(
                           onPressed: () async {
+                            print(_phone.text);
                             var userId = await FlutterSession().get("userId");
+                            var bool = true;
                             Map data = {
                               "phone": _phone.text,
                               "amount": _budgetPrice.text,
                               "category": activeCategory,
-                              "userId": userId
+                              "userId": userId,
+                              "bool": bool
                             };
                             var response =
                                 await networkHandler.postIncome('payment', data);
@@ -361,15 +371,20 @@ class _MakePaymentPageState extends State<MakePaymentPage> {
   }
 
   Future scanBarcode() async {
-    String scanResult;
+    final scanResult;
     try {
       print("open");
       scanResult = await FlutterBarcodeScanner.scanBarcode(
-          "#ff6666", "cancel", true, ScanMode.BARCODE);
+          "#ff6666", "cancel", true, ScanMode.QR);
+      if (!mounted) return;
+      qrCode = scanResult;
+      _phone.text = scanResult;
+      print(scanResult);
+      // _phone = TextEditingController(text:scanResult);
       print("close");
     } on PlatformException {
       print("error");
     }
-    if (!mounted) return;
   }
+
 }

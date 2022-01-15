@@ -7,7 +7,7 @@ class NetworkHandler
 {
   var logger = Logger();
 
-  String baseurl = "https://curly-termite-17.loca.lt/";
+  String baseurl = "https://odd-dog-61.loca.lt/";
 
   Future post(String url,Map<String, String> body)async
   {

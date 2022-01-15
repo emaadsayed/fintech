@@ -40,10 +40,12 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   _textInput(
+                    bool: false,
                       hint: "Email",
                       icon: Icons.email,
                       controller: _emailController),
                   _textInput(
+                      bool: true,
                       hint: "Password",
                       icon: Icons.vpn_key,
                       controller: _passwordController),
@@ -91,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     child: new Padding(
                       padding: new EdgeInsets.all(10.0),
-                      child: new Text("Don't have an account ? Registor"),
+                      child: new Text("Don't have an account ? Register"),
                     ),
                   )
                 ],
@@ -103,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _textInput({controller, hint, icon}) {
+  Widget _textInput({controller, hint, icon, bool}) {
     return Container(
       margin: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
@@ -112,6 +114,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       padding: EdgeInsets.only(left: 10),
       child: TextFormField(
+        obscureText: bool,
         controller: controller,
         decoration: InputDecoration(
           border: InputBorder.none,

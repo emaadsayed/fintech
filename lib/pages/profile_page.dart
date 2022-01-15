@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/theme/colors.dart';
 import 'package:flutter_session/flutter_session.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../NetworkHandler.dart';
 import 'add_income_page.dart';
@@ -20,6 +21,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   NetworkHandler networkHandler = NetworkHandler();
+  var loader = false;
   var user;
   var name = 'loading...',
       email = 'loading...',
@@ -33,6 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController password = TextEditingController();
 
   Future<void> getUser() async {
+    loader=true;
     var userId = await FlutterSession().get("userId");
     var response = await networkHandler.get('user/$userId');
     setState(() {
@@ -42,6 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
       income = response['data']['income'];
       dob = '01-12-1999';
     });
+    loader=false;
     print(response);
   }
 
@@ -57,7 +61,13 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xFFFAFAFA),
-        body: getBody(),
+        body: loader
+            ? Center(
+            child: SpinKitDoubleBounce(
+              color: Color(0xffF5591F),
+              size: 50.0,
+            ))
+            : getBody(),
         bottomNavigationBar: getFooter(),
         floatingActionButton: FloatingActionButton(
             onPressed: () {
@@ -135,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                           image: NetworkImage(
-                                              "https://images.unsplash.com/photo-1531256456869-ce942a665e80?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTI4fHxwcm9maWxlfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"),
+                                              "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"),
                                           fit: BoxFit.cover)),
                                 ),
                               )
@@ -242,7 +252,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           SizedBox(
-            height: 50,
+            height: 10,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),

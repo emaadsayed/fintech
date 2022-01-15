@@ -205,11 +205,13 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                       child: IconButton(
                           onPressed: () async {
                             var userId = await FlutterSession().get("userId");
+                            var bool = false;
                             Map data = {
                               "phone": 0,
                               "amount": _budgetPrice.text,
                               "category": activeCategory,
-                              "userId": userId
+                              "userId": userId,
+                              "bool": bool
                             };
                             var response =
                             await networkHandler.postIncome('payment', data);

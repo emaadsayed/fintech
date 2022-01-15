@@ -8,6 +8,7 @@ import 'package:flutter_one/pages/profile_page.dart';
 import 'package:flutter_one/pages/stats_page.dart';
 import 'package:flutter_one/theme/colors.dart';
 import 'package:flutter_session/flutter_session.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'budget_page.dart';
 import 'home_page.dart';
@@ -22,23 +23,26 @@ class DailyPage extends StatefulWidget {
 
 class _DailyPageState extends State<DailyPage> {
   NetworkHandler networkHandler = NetworkHandler();
-  int activeDay = 2;
+  int activeDay = 3;
   List dailyData = [];
   var totalPayment="Loading...";
+  var loader = false;
 
   Future<void> getDaily() async {
+    loader = true;
     var userId = await FlutterSession().get("userId");
     var date;
     date = days[activeDay]['day'];
     totalPayment="Loading...";
     var response = await networkHandler.get('expense/$userId/$date');
+    loader = false;
     setState(() {
       dailyData = response['data'];
       totalPayment = response['totalPayment'];
     });
     // print(response);
-    print(dailyData);
-    print(totalPayment);
+    // print(dailyData);
+    // print(totalPayment);
   }
   @override
   void initState() {
@@ -52,7 +56,13 @@ class _DailyPageState extends State<DailyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xFFFAFAFA),
-        body: getBody(),
+        body: loader
+            ? Center(
+            child: SpinKitDoubleBounce(
+              color: Color(0xffF5591F),
+              size: 50.0,
+            ))
+            : getBody(),
         bottomNavigationBar: getFooter(),
         floatingActionButton: FloatingActionButton(
             onPressed: () {

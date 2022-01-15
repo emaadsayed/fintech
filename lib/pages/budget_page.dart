@@ -5,6 +5,7 @@ import 'package:flutter_one/json/budget_json.dart';
 import 'package:flutter_one/json/day_month.dart';
 import 'package:flutter_one/theme/colors.dart';
 import 'package:flutter_session/flutter_session.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../NetworkHandler.dart';
 import 'create_budget_page.dart';
@@ -23,16 +24,21 @@ class BudgetPage extends StatefulWidget {
 class _BudgetPageState extends State<BudgetPage> {
   NetworkHandler networkHandler = NetworkHandler();
   int activeDay = 5;
-  List payments=[];
+  List payments = [];
+  var loader = false;
 
   Future<void> getData() async {
+    loader = true;
+    print(loader);
     var month = months[activeDay]['day'];
     var userId = await FlutterSession().get("userId");
     var response = await networkHandler.get('monthlyExpense/$userId/$month');
+    loader = false;
     setState(() {
       payments = response['payment'];
     });
-    print(response['payment']);
+    // print(response['payment']);
+    print(loader);
   }
 
   @override
@@ -46,19 +52,25 @@ class _BudgetPageState extends State<BudgetPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xFFFAFAFA),
-        body: getBody(),
+        body: loader
+            ? Center(
+                child: SpinKitDoubleBounce(
+                color: Color(0xffF5591F),
+                size: 50.0,
+              ))
+            : getBody(),
         bottomNavigationBar: getFooter(),
         floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => MakePaymentPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MakePaymentPage()));
             },
             child: const Icon(Icons.add, size: 25),
             backgroundColor: Color(0xffF5591F)
-          //params
-        ),
+            //params
+            ),
         floatingActionButtonLocation:
-        FloatingActionButtonLocation.centerDocked);
+            FloatingActionButtonLocation.centerDocked);
   }
 
   Widget getBody() {
@@ -93,11 +105,14 @@ class _BudgetPageState extends State<BudgetPage> {
                       ),
                       Row(
                         children: [
-                          IconButton(onPressed: (){_navigateToNextScreen(context);}, icon: Icon(
-                            Icons.add,
-                            size: 25,
-                          )
-                          ),
+                          IconButton(
+                              onPressed: () {
+                                _navigateToNextScreen(context);
+                              },
+                              icon: Icon(
+                                Icons.add,
+                                size: 25,
+                              )),
                           SizedBox(
                             width: 20,
                           ),
@@ -170,105 +185,106 @@ class _BudgetPageState extends State<BudgetPage> {
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Column(
                 children: List.generate(payments.length, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: grey.withOpacity(0.01),
-                              spreadRadius: 10,
-                              blurRadius: 3,
-                              // changes position of shadow
-                            ),
-                          ]),
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 25, right: 25, bottom: 25, top: 25),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: grey.withOpacity(0.01),
+                          spreadRadius: 10,
+                          blurRadius: 3,
+                          // changes position of shadow
+                        ),
+                      ]),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: 25, right: 25, bottom: 25, top: 25),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          payments[index]['category'],
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              color: Color(0xff67727d).withOpacity(0.6)),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              payments[index]['category'],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: Color(0xff67727d).withOpacity(0.6)),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      '\$' + payments[index]['Total'],
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 3),
-                                      child: Text(
-                                        payments[index]['Percentage'],
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 13,
-                                            color:
-                                            Color(0xff67727d).withOpacity(0.6)),
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  '\$' + payments[index]['Total'],
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 3),
                                   child: Text(
-                                    payments[index]['Budget'],
+                                    payments[index]['Percentage'] + "%",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 13,
-                                        color: Color(0xff67727d).withOpacity(0.6)),
+                                        color:
+                                            Color(0xff67727d).withOpacity(0.6)),
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              height: 15,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 3),
+                              child: Text(
+                                "\$" + payments[index]['Budget'],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                    color: Color(0xff67727d).withOpacity(0.6)),
+                              ),
                             ),
-                            Stack(
-                              children: [
-                                Container(
-                                  width: (size.width - 40),
-                                  height: 4,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Color(0xff67727d).withOpacity(0.1)),
-                                ),
-                                Container(
-                                  width: (size.width - 40) *
-                                      double.parse(payments[index]['PercentageLabel']),
-                                  height: 4,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Color(0xffF5591F)),
-                                ),
-                              ],
-                            )
                           ],
                         ),
-                      ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Stack(
+                          children: [
+                            Container(
+                              width: (size.width - 40),
+                              height: 4,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Color(0xff67727d).withOpacity(0.1)),
+                            ),
+                            Container(
+                              width: (size.width - 40) *
+                                  double.parse(
+                                      payments[index]['PercentageLabel']),
+                              height: 4,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Color(0xffF5591F)),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
-                  );
-                })),
+                  ),
+                ),
+              );
+            })),
           )
         ],
       ),
@@ -311,10 +327,9 @@ class _BudgetPageState extends State<BudgetPage> {
       //other params
     );
   }
-
-
 }
 
 void _navigateToNextScreen(BuildContext context) {
-  Navigator.push(context, MaterialPageRoute(builder: (context) => CreateBudgetPage()));
+  Navigator.push(
+      context, MaterialPageRoute(builder: (context) => CreateBudgetPage()));
 }
