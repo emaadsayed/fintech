@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/json/daily_json.dart';
 import 'package:flutter_one/json/day_month.dart';
+import 'package:flutter_one/pages/stats_page.dart';
 import 'package:flutter_one/theme/colors.dart';
 
 class DailyPage extends StatefulWidget {
@@ -42,7 +43,7 @@ class _DailyPageState extends State<DailyPage> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       Text(
                         "Daily Transaction",
                         style: TextStyle(
@@ -50,7 +51,15 @@ class _DailyPageState extends State<DailyPage> {
                             fontWeight: FontWeight.bold,
                             color: black),
                       ),
-                      Icon(Ionicons.md_stats)
+                      Row(
+                        children: [
+                          IconButton(onPressed: (){_navigateToNextScreen(context);}, icon: Icon(
+                            Icons.stacked_bar_chart,
+                            size: 25,
+                          )
+                          ),
+                        ],
+                      )
                     ],
                   ),
                   const SizedBox(
@@ -235,4 +244,7 @@ class _DailyPageState extends State<DailyPage> {
       ),
     );
   }
+}
+void _navigateToNextScreen(BuildContext context) {
+  Navigator.push(context, MaterialPageRoute(builder: (context) => StatsPage()));
 }

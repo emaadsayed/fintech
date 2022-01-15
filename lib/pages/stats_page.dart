@@ -19,7 +19,7 @@ class _StatsPageState extends State<StatsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: grey.withOpacity(0.05),
+      backgroundColor: Color(0xFFFAFAFA),
       body: getBody(),
     );
   }
@@ -68,7 +68,6 @@ class _StatsPageState extends State<StatsPage> {
                             fontWeight: FontWeight.bold,
                             color: black),
                       ),
-                      Icon(AntDesign.search1)
                     ],
                   ),
                   SizedBox(
