@@ -22,22 +22,33 @@ class DailyPage extends StatefulWidget {
 
 class _DailyPageState extends State<DailyPage> {
   NetworkHandler networkHandler = NetworkHandler();
-  int activeDay = 3;
-  // Future<void> getUser() async {
-  //   var userId = await FlutterSession().get("userId");
-  //   var response = await networkHandler.get('user/$userId');
-  //   setState(() {
-  //
-  //   });
-  //   print(response);
-  // }
+  int activeDay = 2;
+  List dailyData = [];
+  var totalPayment="Loading...";
+
+  Future<void> getDaily() async {
+    var userId = await FlutterSession().get("userId");
+    var date;
+    date = days[activeDay]['day'];
+    totalPayment="Loading...";
+    var response = await networkHandler.get('expense/$userId/$date');
+    setState(() {
+      dailyData = response['data'];
+      totalPayment = response['totalPayment'];
+    });
+    // print(response);
+    print(dailyData);
+    print(totalPayment);
+  }
   @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   print("Init");
-  //   getUser();
-  // }
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("Daily");
+    getDaily();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xFFFAFAFA),
@@ -106,6 +117,7 @@ class _DailyPageState extends State<DailyPage> {
                           onTap: () {
                             setState(() {
                               activeDay = index;
+                              getDaily();
                             });
                           },
                           child: Container(
@@ -158,7 +170,7 @@ class _DailyPageState extends State<DailyPage> {
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Column(
-                children: List.generate(daily.length, (index) {
+                children: List.generate(dailyData.length, (index) {
                   return Column(
                     children: [
                       Row(
@@ -177,7 +189,7 @@ class _DailyPageState extends State<DailyPage> {
                                   ),
                                   child: Center(
                                     child: Image.asset(
-                                      daily[index]['icon'],
+                                      dailyData[index]['icon'],
                                       width: 35,
                                       height: 35,
                                     ),
@@ -185,27 +197,16 @@ class _DailyPageState extends State<DailyPage> {
                                 ),
                                 SizedBox(width: 15),
                                 Container(
-                                  width: (size.width - 90) * 0.5,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        daily[index]['name'],
+                                        dailyData[index]['category'],
                                         style: const TextStyle(
                                             fontSize: 18,
                                             color: black,
                                             fontWeight: FontWeight.w500),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Text(
-                                        daily[index]['date'],
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: black.withOpacity(0.5),
-                                            fontWeight: FontWeight.w400),
-                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
                                   ),
@@ -219,7 +220,7 @@ class _DailyPageState extends State<DailyPage> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  daily[index]['price'],
+                                  "\$"+dailyData[index]['amount'],
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 18,
@@ -260,17 +261,14 @@ class _DailyPageState extends State<DailyPage> {
                   ),
                 ),
                 const Spacer(),
-                const Padding(
-                  padding: EdgeInsets.only(top: 5),
-                  child: Text(
-                    "\$1780.00",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: black,
-                        fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
+                Text(
+                  totalPayment,
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: black,
+                      fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                )
               ],
             ),
           )
