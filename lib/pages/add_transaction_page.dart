@@ -3,6 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/json/create_budget_json.dart';
 import 'package:flutter_one/theme/colors.dart';
+import 'package:flutter_session/flutter_session.dart';
+
+import '../NetworkHandler.dart';
+import 'daily_page.dart';
 
 class AddTransactionPage extends StatefulWidget {
   const AddTransactionPage({Key? key}) : super(key: key);
@@ -12,10 +16,10 @@ class AddTransactionPage extends StatefulWidget {
 }
 
 class _AddTransactionPageState extends State<AddTransactionPage> {
+  NetworkHandler networkHandler = NetworkHandler();
   int activeCategory = 0;
   int activePayMethod = 0;
-  TextEditingController _budgetName = TextEditingController(text: "");
-  TextEditingController _budgetPrice = TextEditingController(text: "");
+  TextEditingController _budgetPrice = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -198,10 +202,30 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                       decoration: BoxDecoration(
                           color: primary,
                           borderRadius: BorderRadius.circular(15)),
-                      child: Icon(
-                        Icons.arrow_forward,
-                        color: white,
-                      ),
+                      child: IconButton(
+                          onPressed: () async {
+                            var userId = await FlutterSession().get("userId");
+                            Map data = {
+                              "phone": 0,
+                              "amount": _budgetPrice.text,
+                              "category": activeCategory,
+                              "userId": userId
+                            };
+                            var response =
+                            await networkHandler.postIncome('payment', data);
+                            print(response);
+                            if (response['status'] == true) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DailyPage()));
+                            }
+                          },
+                          icon: Icon(
+                            Icons.arrow_forward,
+                            size: 25,
+                            color: white,
+                          )),
                     ),
                   ],
                 )

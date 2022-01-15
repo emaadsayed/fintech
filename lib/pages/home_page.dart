@@ -4,7 +4,10 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/pages/add_transaction_page.dart';
 import 'package:flutter_one/pages/send_money_page.dart';
 import 'package:flutter_one/theme/colors.dart';
+import 'package:flutter_session/flutter_session.dart';
 
+import '../NetworkHandler.dart';
+import 'add_income_page.dart';
 import 'budget_page.dart';
 import 'daily_page.dart';
 import 'make_payment_page.dart';
@@ -18,6 +21,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  NetworkHandler networkHandler = NetworkHandler();
+  var income = 'loading...';
+
+  Future<void> getUser() async {
+    var userId = await FlutterSession().get("userId");
+    var response = await networkHandler.get('user/$userId');
+    setState(() {
+      income = response['data']['income'];
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
                           Text(
-                            "Daily Transaction",
+                            "Home",
                             style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
@@ -96,8 +117,8 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "20,600",
+                          Text(
+                            income,
                             style: const TextStyle(
                                 fontSize: 22, fontWeight: FontWeight.w700),
                           ),
@@ -111,16 +132,24 @@ class _HomePageState extends State<HomePage> {
                           )
                         ],
                       ),
-                      Container(
+                      InkWell(
+                      child: Container(
                         height: 60,
                         width: 60,
                         decoration: const BoxDecoration(
                             shape: BoxShape.circle, color: Color(0xffffac30)),
-                        child: const Icon(
+                        child: Icon(
                           Icons.add,
                           size: 30,
                         ),
-                      )
+                      ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddIncomePage()));
+                          }
+                      ),
                     ],
                   ),
                 ),

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/json/create_budget_json.dart';
 import 'package:flutter_one/theme/colors.dart';
+import 'package:flutter_session/flutter_session.dart';
+
+import '../NetworkHandler.dart';
+import 'daily_page.dart';
 
 class SendMoneyPage extends StatefulWidget {
   const SendMoneyPage({Key? key}) : super(key: key);
@@ -11,10 +15,11 @@ class SendMoneyPage extends StatefulWidget {
 }
 
 class _SendMoneyPageState extends State<SendMoneyPage> {
+  NetworkHandler networkHandler = NetworkHandler();
   int activeCategory = 0;
   int activePayMethod = 0;
-  TextEditingController _budgetName = TextEditingController(text: "");
-  TextEditingController _budgetPrice = TextEditingController(text: "");
+  TextEditingController _phoneNumber = TextEditingController();
+  TextEditingController _budgetPrice = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,7 +190,7 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                       color: Color(0xff67727d)),
                 ),
                 TextField(
-                  controller: _budgetName,
+                  controller: _phoneNumber,
                   cursorColor: black,
                   style: TextStyle(
                       fontSize: 17, fontWeight: FontWeight.bold, color: black),
@@ -233,10 +238,30 @@ class _SendMoneyPageState extends State<SendMoneyPage> {
                       decoration: BoxDecoration(
                           color: primary,
                           borderRadius: BorderRadius.circular(15)),
-                      child: Icon(
-                        Icons.arrow_forward,
-                        color: white,
-                      ),
+                      child: IconButton(
+                          onPressed: () async {
+                            var userId = await FlutterSession().get("userId");
+                            Map data = {
+                              "phone": _phoneNumber.text,
+                              "amount": _budgetPrice.text,
+                              "category": 6,
+                              "userId": userId
+                            };
+                            var response =
+                            await networkHandler.postIncome('payment', data);
+                            print(response);
+                            if (response['status'] == true) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DailyPage()));
+                            }
+                          },
+                          icon: Icon(
+                            Icons.arrow_forward,
+                            size: 25,
+                            color: white,
+                          )),
                     ),
                   ],
                 )

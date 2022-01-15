@@ -29,8 +29,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // TextEditingController _email =
   //     TextEditingController(text: email);
-  TextEditingController dateOfBirth = TextEditingController(text: "04-19-1992");
-  TextEditingController password = TextEditingController(text: "123456");
+  TextEditingController dateOfBirth = TextEditingController();
+  TextEditingController password = TextEditingController();
 
   Future<void> getUser() async {
     var userId = await FlutterSession().get("userId");

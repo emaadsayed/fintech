@@ -4,7 +4,9 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/json/budget_json.dart';
 import 'package:flutter_one/json/day_month.dart';
 import 'package:flutter_one/theme/colors.dart';
+import 'package:flutter_session/flutter_session.dart';
 
+import '../NetworkHandler.dart';
 import 'create_budget_page.dart';
 import 'daily_page.dart';
 import 'home_page.dart';
@@ -19,7 +21,27 @@ class BudgetPage extends StatefulWidget {
 }
 
 class _BudgetPageState extends State<BudgetPage> {
-  int activeDay = 3;
+  NetworkHandler networkHandler = NetworkHandler();
+  int activeDay = 5;
+  List payments=[];
+
+  Future<void> getData() async {
+    var month = months[activeDay]['day'];
+    var userId = await FlutterSession().get("userId");
+    var response = await networkHandler.get('monthlyExpense/$userId/$month');
+    setState(() {
+      payments = response['payment'];
+    });
+    print(response['payment']);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,6 +116,7 @@ class _BudgetPageState extends State<BudgetPage> {
                           onTap: () {
                             setState(() {
                               activeDay = index;
+                              getData();
                             });
                           },
                           child: Container(
@@ -146,7 +169,7 @@ class _BudgetPageState extends State<BudgetPage> {
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Column(
-                children: List.generate(budget_json.length, (index) {
+                children: List.generate(payments.length, (index) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: Container(
@@ -169,7 +192,7 @@ class _BudgetPageState extends State<BudgetPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              budget_json[index]['name'],
+                              payments[index]['category'],
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14,
@@ -184,7 +207,7 @@ class _BudgetPageState extends State<BudgetPage> {
                                 Row(
                                   children: [
                                     Text(
-                                      budget_json[index]['price'],
+                                      '\$' + payments[index]['Total'],
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
@@ -196,7 +219,7 @@ class _BudgetPageState extends State<BudgetPage> {
                                     Padding(
                                       padding: const EdgeInsets.only(top: 3),
                                       child: Text(
-                                        budget_json[index]['label_percentage'],
+                                        payments[index]['Percentage'],
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 13,
@@ -209,7 +232,7 @@ class _BudgetPageState extends State<BudgetPage> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 3),
                                   child: Text(
-                                    "\$5000.00",
+                                    payments[index]['Budget'],
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 13,
@@ -232,11 +255,11 @@ class _BudgetPageState extends State<BudgetPage> {
                                 ),
                                 Container(
                                   width: (size.width - 40) *
-                                      budget_json[index]['percentage'],
+                                      double.parse(payments[index]['PercentageLabel']),
                                   height: 4,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
-                                      color: budget_json[index]['color']),
+                                      color: Color(0xffF5591F)),
                                 ),
                               ],
                             )
