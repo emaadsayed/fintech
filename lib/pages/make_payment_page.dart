@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/json/create_budget_json.dart';
+import 'package:flutter_one/pages/daily_page.dart';
 import 'package:flutter_one/theme/colors.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_one/NetworkHandler.dart';
+import 'package:flutter_session/flutter_session.dart';
 
 class MakePaymentPage extends StatefulWidget {
   const MakePaymentPage({Key? key}) : super(key: key);
@@ -13,10 +16,11 @@ class MakePaymentPage extends StatefulWidget {
 }
 
 class _MakePaymentPageState extends State<MakePaymentPage> {
+  NetworkHandler networkHandler = NetworkHandler();
   int activeCategory = 0;
   int activePayMethod = 0;
-  TextEditingController _budgetName = TextEditingController(text: "");
-  TextEditingController _budgetPrice = TextEditingController(text: "");
+  TextEditingController _phone = TextEditingController();
+  TextEditingController _budgetPrice = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -273,7 +277,7 @@ class _MakePaymentPageState extends State<MakePaymentPage> {
                       color: Color(0xff67727d)),
                 ),
                 TextField(
-                  controller: _budgetName,
+                  controller: _phone,
                   cursorColor: black,
                   style: TextStyle(
                       fontSize: 17, fontWeight: FontWeight.bold, color: black),
@@ -321,10 +325,30 @@ class _MakePaymentPageState extends State<MakePaymentPage> {
                       decoration: BoxDecoration(
                           color: primary,
                           borderRadius: BorderRadius.circular(15)),
-                      child: Icon(
-                        Icons.arrow_forward,
-                        color: white,
-                      ),
+                      child: IconButton(
+                          onPressed: () async {
+                            var userId = await FlutterSession().get("userId");
+                            Map data = {
+                              "phone": _phone.text,
+                              "amount": _budgetPrice.text,
+                              "category": activeCategory,
+                              "userId": userId
+                            };
+                            var response =
+                                await networkHandler.postIncome('payment', data);
+                            print(response);
+                            if (response['status'] == true) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DailyPage()));
+                            }
+                          },
+                          icon: Icon(
+                            Icons.arrow_forward,
+                            size: 25,
+                            color: white,
+                          )),
                     ),
                   ],
                 )
@@ -335,11 +359,13 @@ class _MakePaymentPageState extends State<MakePaymentPage> {
       ),
     );
   }
+
   Future scanBarcode() async {
     String scanResult;
-    try{
+    try {
       print("open");
-      scanResult = await FlutterBarcodeScanner.scanBarcode("#ff6666", "cancel", true, ScanMode.BARCODE);
+      scanResult = await FlutterBarcodeScanner.scanBarcode(
+          "#ff6666", "cancel", true, ScanMode.BARCODE);
       print("close");
     } on PlatformException {
       print("error");
