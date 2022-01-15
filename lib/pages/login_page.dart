@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                           print(data);
                           var response =
                               await networkHandler.post('signIn', data);
-                          print(response['data']['_id']);
+                          // print(response['data']['_id']);
                           if (response['status'] == true) {
                             session.set('userId', response['data']['_id']);
                             Navigator.push(

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/json/create_budget_json.dart';
 import 'package:flutter_one/theme/colors.dart';
+import 'package:flutter_session/flutter_session.dart';
+
+import '../NetworkHandler.dart';
+import 'profile_page.dart';
 
 class AddIncomePage extends StatefulWidget {
   const AddIncomePage({Key? key}) : super(key: key);
@@ -11,8 +15,9 @@ class AddIncomePage extends StatefulWidget {
 }
 
 class _AddIncomePageState extends State<AddIncomePage> {
+  NetworkHandler networkHandler = NetworkHandler();
   int activeCategory = 0;
-  TextEditingController _budgetPrice = TextEditingController(text: "\$1500.00");
+  TextEditingController _budgetPrice = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +25,7 @@ class _AddIncomePageState extends State<AddIncomePage> {
       body: getBody(),
     );
   }
+
   Widget getBody() {
     var size = MediaQuery.of(context).size;
     return SingleChildScrollView(
@@ -102,9 +108,24 @@ class _AddIncomePageState extends State<AddIncomePage> {
                       decoration: BoxDecoration(
                           color: primary,
                           borderRadius: BorderRadius.circular(15)),
-                      child: Icon(
-                        Icons.arrow_forward,
-                        color: white,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_forward,
+                          color: white,
+                        ),
+                        onPressed: () async {
+                          var userId = await FlutterSession().get("userId");
+                          Map<String, String> data = {
+                            "income": _budgetPrice.text,
+                            "userId": userId
+                          };
+                          var response =
+                              await networkHandler.postIncome('income', data);
+                          print(response['status']);
+                          if (response['status'] == true) {
+                            Navigator.pop(context);
+                          }
+                        },
                       ),
                     ),
                   ],

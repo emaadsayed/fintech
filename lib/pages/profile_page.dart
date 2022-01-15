@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/theme/colors.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-
+import '../NetworkHandler.dart';
 import 'add_income_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -13,14 +14,40 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  TextEditingController _email =
-      TextEditingController(text: "abbie_wilson@gmail.com");
+  NetworkHandler networkHandler = NetworkHandler();
+  var user;
+  var name='loading...', email='loading...', phone='loading...', dob='loading...', income='loading...';
+
+  // TextEditingController _email =
+  //     TextEditingController(text: email);
   TextEditingController dateOfBirth = TextEditingController(text: "04-19-1992");
   TextEditingController password = TextEditingController(text: "123456");
+
+  Future<void> getUser() async {
+    var userId = await FlutterSession().get("userId");
+    var response = await networkHandler.get('user/$userId');
+    setState(() {
+      name = response['data']['name'];
+      email = response['data']['email'];
+      phone = response['data']['phNumber'];
+      income = response['data']['income'];
+      dob='01-12-1999';
+    });
+    print(response);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("Init");
+    getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: grey.withOpacity(0.05),
+      backgroundColor: Color(0xFFFAFAFA),
       body: getBody(),
     );
   }
@@ -102,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Abbie Wilson",
+                              name,
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -159,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 height: 10,
                               ),
                               Text(
-                                "\$2446.90",
+                                income,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
@@ -175,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(13.0),
                                   child: Text(
-                                    "Update",
+                                    "Add Income",
                                     style: TextStyle(color: white),
                                   ),
                                 ),
@@ -209,13 +236,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       fontSize: 13,
                       color: Color(0xff67727d)),
                 ),
-                TextField(
-                  controller: _email,
-                  cursorColor: black,
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  email,
                   style: TextStyle(
                       fontSize: 17, fontWeight: FontWeight.bold, color: black),
-                  decoration: InputDecoration(
-                      hintText: "Email", border: InputBorder.none),
                 ),
                 SizedBox(
                   height: 20,
@@ -227,32 +254,34 @@ class _ProfilePageState extends State<ProfilePage> {
                       fontSize: 13,
                       color: Color(0xff67727d)),
                 ),
-                TextField(
-                  controller: dateOfBirth,
-                  cursorColor: black,
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  dob,
                   style: TextStyle(
                       fontSize: 17, fontWeight: FontWeight.bold, color: black),
-                  decoration: InputDecoration(
-                      hintText: "Date of birth", border: InputBorder.none),
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 Text(
-                  "Date of birth",
+                  "Phone Number",
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
                       color: Color(0xff67727d)),
                 ),
-                TextField(
-                  obscureText: true,
-                  controller: password,
-                  cursorColor: black,
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  phone,
                   style: TextStyle(
                       fontSize: 17, fontWeight: FontWeight.bold, color: black),
-                  decoration: InputDecoration(
-                      hintText: "Password", border: InputBorder.none),
+                ),
+                SizedBox(
+                  height: 20,
                 ),
               ],
             ),
