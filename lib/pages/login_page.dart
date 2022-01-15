@@ -6,6 +6,8 @@ import 'package:flutter_one/widgets/btn_widget.dart';
 import 'package:flutter_one/widgets/herder_container.dart';
 import 'package:flutter_session/flutter_session.dart';
 
+import 'profile_page.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -72,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => RootApp()));
+                                    builder: (context) => ProfilePage()));
                           }
                         },
                         btnText: "LOGIN",

@@ -1,3 +1,4 @@
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/theme/colors.dart';
@@ -5,6 +6,10 @@ import 'package:flutter_session/flutter_session.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../NetworkHandler.dart';
 import 'add_income_page.dart';
+import 'budget_page.dart';
+import 'daily_page.dart';
+import 'home_page.dart';
+import 'make_payment_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -16,7 +21,11 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   NetworkHandler networkHandler = NetworkHandler();
   var user;
-  var name='loading...', email='loading...', phone='loading...', dob='loading...', income='loading...';
+  var name = 'loading...',
+      email = 'loading...',
+      phone = 'loading...',
+      dob = 'loading...',
+      income = 'loading...';
 
   // TextEditingController _email =
   //     TextEditingController(text: email);
@@ -31,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
       email = response['data']['email'];
       phone = response['data']['phNumber'];
       income = response['data']['income'];
-      dob='01-12-1999';
+      dob = '01-12-1999';
     });
     print(response);
   }
@@ -47,9 +56,20 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFAFAFA),
-      body: getBody(),
-    );
+        backgroundColor: Color(0xFFFAFAFA),
+        body: getBody(),
+        bottomNavigationBar: getFooter(),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => MakePaymentPage()));
+            },
+            child: const Icon(Icons.add, size: 25),
+            backgroundColor: Color(0xffF5591F)
+            //params
+            ),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.centerDocked);
   }
 
   Widget getBody() {
@@ -288,6 +308,43 @@ class _ProfilePageState extends State<ProfilePage> {
           )
         ],
       ),
+    );
+  }
+
+  Widget getFooter() {
+    List<IconData> iconItems = [
+      Ionicons.md_cash,
+      Ionicons.md_calendar,
+      Ionicons.md_wallet,
+      Ionicons.ios_person,
+    ];
+
+    return AnimatedBottomNavigationBar(
+      activeColor: primary,
+      splashColor: secondary,
+      inactiveColor: Colors.black.withOpacity(0.5),
+      icons: iconItems,
+      activeIndex: 3,
+      gapLocation: GapLocation.center,
+      notchSmoothness: NotchSmoothness.softEdge,
+      leftCornerRadius: 10,
+      iconSize: 25,
+      rightCornerRadius: 10,
+      onTap: (index) {
+        if (index == 0)
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
+        if (index == 1)
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => DailyPage()));
+        if (index == 2)
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => BudgetPage()));
+        if (index == 3)
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => ProfilePage()));
+      },
+      //other params
     );
   }
 }

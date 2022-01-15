@@ -123,7 +123,8 @@ class _AddIncomePageState extends State<AddIncomePage> {
                               await networkHandler.postIncome('income', data);
                           print(response['status']);
                           if (response['status'] == true) {
-                            Navigator.pop(context);
+                            Navigator.push(
+                                context, MaterialPageRoute(builder: (context) => ProfilePage()));
                           }
                         },
                       ),

@@ -1,3 +1,4 @@
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/json/budget_json.dart';
@@ -5,6 +6,10 @@ import 'package:flutter_one/json/day_month.dart';
 import 'package:flutter_one/theme/colors.dart';
 
 import 'create_budget_page.dart';
+import 'daily_page.dart';
+import 'home_page.dart';
+import 'make_payment_page.dart';
+import 'profile_page.dart';
 
 class BudgetPage extends StatefulWidget {
   const BudgetPage({Key? key}) : super(key: key);
@@ -18,9 +23,20 @@ class _BudgetPageState extends State<BudgetPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: grey.withOpacity(0.05),
-      body: getBody(),
-    );
+        backgroundColor: Color(0xFFFAFAFA),
+        body: getBody(),
+        bottomNavigationBar: getFooter(),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => MakePaymentPage()));
+            },
+            child: const Icon(Icons.add, size: 25),
+            backgroundColor: Color(0xffF5591F)
+          //params
+        ),
+        floatingActionButtonLocation:
+        FloatingActionButtonLocation.centerDocked);
   }
 
   Widget getBody() {
@@ -233,6 +249,43 @@ class _BudgetPageState extends State<BudgetPage> {
           )
         ],
       ),
+    );
+  }
+
+  Widget getFooter() {
+    List<IconData> iconItems = [
+      Ionicons.md_cash,
+      Ionicons.md_calendar,
+      Ionicons.md_wallet,
+      Ionicons.ios_person,
+    ];
+
+    return AnimatedBottomNavigationBar(
+      activeColor: primary,
+      splashColor: secondary,
+      inactiveColor: Colors.black.withOpacity(0.5),
+      icons: iconItems,
+      activeIndex: 2,
+      gapLocation: GapLocation.center,
+      notchSmoothness: NotchSmoothness.softEdge,
+      leftCornerRadius: 10,
+      iconSize: 25,
+      rightCornerRadius: 10,
+      onTap: (index) {
+        if (index == 0)
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
+        if (index == 1)
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => DailyPage()));
+        if (index == 2)
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => BudgetPage()));
+        if (index == 3)
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => ProfilePage()));
+      },
+      //other params
     );
   }
 
