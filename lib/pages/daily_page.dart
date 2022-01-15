@@ -1,11 +1,13 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_one/NetworkHandler.dart';
 import 'package:flutter_one/json/daily_json.dart';
 import 'package:flutter_one/json/day_month.dart';
 import 'package:flutter_one/pages/profile_page.dart';
 import 'package:flutter_one/pages/stats_page.dart';
 import 'package:flutter_one/theme/colors.dart';
+import 'package:flutter_session/flutter_session.dart';
 
 import 'budget_page.dart';
 import 'home_page.dart';
@@ -19,8 +21,23 @@ class DailyPage extends StatefulWidget {
 }
 
 class _DailyPageState extends State<DailyPage> {
+  NetworkHandler networkHandler = NetworkHandler();
   int activeDay = 3;
+  // Future<void> getUser() async {
+  //   var userId = await FlutterSession().get("userId");
+  //   var response = await networkHandler.get('user/$userId');
+  //   setState(() {
+  //
+  //   });
+  //   print(response);
+  // }
   @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   print("Init");
+  //   getUser();
+  // }
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xFFFAFAFA),
