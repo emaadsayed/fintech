@@ -124,7 +124,9 @@ class _AddIncomePageState extends State<AddIncomePage> {
                           print(response['status']);
                           if (response['status'] == true) {
                             Navigator.push(
-                                context, MaterialPageRoute(builder: (context) => ProfilePage()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProfilePage()));
                           }
                         },
                       ),

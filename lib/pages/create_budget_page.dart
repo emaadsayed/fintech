@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_one/json/create_budget_json.dart';
 import 'package:flutter_one/theme/colors.dart';
+import 'package:flutter_session/flutter_session.dart';
+
+import '../NetworkHandler.dart';
+import 'budget_page.dart';
 
 class CreateBudgetPage extends StatefulWidget {
   const CreateBudgetPage({Key? key}) : super(key: key);
@@ -11,8 +15,10 @@ class CreateBudgetPage extends StatefulWidget {
 }
 
 class _CreateBudgetPageState extends State<CreateBudgetPage> {
+  NetworkHandler networkHandler = NetworkHandler();
   int activeCategory = 0;
-  TextEditingController _budgetPrice = TextEditingController(text: "\$1500.00");
+  var categoryName='';
+  TextEditingController _budgetPrice = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,6 +83,7 @@ class _CreateBudgetPageState extends State<CreateBudgetPage> {
                     onTap: () {
                       setState(() {
                         activeCategory = index;
+                        categoryName = categories[index]['name'];
                       });
                     },
                     child: Padding(
@@ -187,10 +194,25 @@ class _CreateBudgetPageState extends State<CreateBudgetPage> {
                       decoration: BoxDecoration(
                           color: primary,
                           borderRadius: BorderRadius.circular(15)),
-                      child: Icon(
+                      child: IconButton(icon: Icon(
                         Icons.arrow_forward,
                         color: white,
                       ),
+                        onPressed: () async {
+                          var userId = await FlutterSession().get("userId");
+                          Map<String, String> data = {
+                            "category": categoryName,
+                            "amount": _budgetPrice.text,
+                            "userId": userId
+                          };
+                          var response =
+                          await networkHandler.postBudget('budget', data);
+                          if (response['status'] == true) {
+                            Navigator.push(
+                                context, MaterialPageRoute(builder: (context) => BudgetPage()));
+                          }
+                        },
+                      )
                     ),
                   ],
                 )

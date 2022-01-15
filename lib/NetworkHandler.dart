@@ -7,7 +7,7 @@ class NetworkHandler
 {
   var logger = Logger();
 
-  String baseurl = "https://tricky-dragonfly-81.loca.lt/";
+  String baseurl = "https://clever-elephant-92.loca.lt/";
 
   Future post(String url,Map<String, String> body)async
   {
@@ -37,6 +37,18 @@ class NetworkHandler
         body: json.encode(body)
     );
     logger.d(url);
+    return json.decode(response.body);
+  }
+
+  Future postBudget(String url, Map<String, String> body)async
+  {
+    url=formater(url);
+    var response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-type": "application/json"},
+        body: json.encode(body)
+    );
+    logger.d(response.body);
     return json.decode(response.body);
   }
 
